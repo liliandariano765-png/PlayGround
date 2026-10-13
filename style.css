@@ -1,0 +1,89 @@
+/* CUPHED — 1930s cartoon boss-battler. Phone/tablet-first, responsive. */
+:root{
+  --ink:#2b1c12;
+  --cream:#f7e8c9;
+  --red:#e23b3b;
+  --pink:#ff6fb5;
+  --gold:#f5b301;
+  --panel:#1d140ecc;
+  --btn:#f7e8c9;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;background:#14100b;color:var(--cream);
+  font-family:"Trebuchet MS","Comic Sans MS",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  overscroll-behavior:none}
+body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  min-height:100dvh;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#topbar{width:100%;max-width:1024px;display:flex;align-items:center;gap:10px;
+  padding:8px 12px}
+#topbar .logo{font-weight:900;letter-spacing:1px;font-size:20px;color:var(--gold);
+  text-shadow:2px 2px 0 #000}
+#topbar .sub{font-size:12px;opacity:.8}
+#topbar .spacer{flex:1}
+.chip{border:2px solid #000;border-radius:999px;background:var(--btn);color:#23160c;
+  font-weight:800;font-size:13px;padding:6px 12px;cursor:pointer;box-shadow:2px 2px 0 #000}
+.chip:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+.chip.small{font-size:12px;padding:5px 10px}
+.chip.on{background:var(--gold)}
+#wrap{width:100%;max-width:1024px;padding:0 8px;display:flex;flex-direction:column;align-items:center;gap:8px}
+#stage{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:3px solid #000;
+  border-radius:14px;overflow:hidden;box-shadow:0 10px 40px #000a}
+canvas#game{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+/* film vignette + grain */
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.45) 100%);}
+#stage::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;z-index:3;
+  background-image:repeating-conic-gradient(#fff 0 .0001turn,#000 0 .0002turn);
+  background-size:120px 120px;mix-blend-mode:overlay}
+/* overlays */
+.overlay{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;
+  background:rgba(12,8,5,.72);backdrop-filter:blur(2px);padding:12px}
+.overlay.hidden{display:none}
+.card{width:min(560px,94%);background:var(--cream);color:var(--ink);border:3px solid #000;
+  border-radius:16px;padding:18px 18px 16px;box-shadow:6px 6px 0 #000;text-align:center;
+  max-height:100%;overflow:auto}
+.card h1{margin:0 0 2px;font-size:clamp(28px,6vw,44px);letter-spacing:1px;color:#b32020;
+  text-shadow:2px 2px 0 #fff,4px 4px 0 #00000022}
+.card h2{margin:0 0 8px;font-size:clamp(20px,4.5vw,30px)}
+.card p{margin:6px 0;font-size:14px;line-height:1.45}
+.card .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.bigbtn{border:3px solid #000;border-radius:12px;background:var(--red);color:#fff;
+  font-weight:900;font-size:18px;padding:12px 22px;cursor:pointer;box-shadow:3px 3px 0 #000;
+  min-height:48px}
+.bigbtn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #000}
+.bigbtn.gold{background:var(--gold);color:#23160c}
+.bigbtn.ghost{background:#fff;color:var(--ink)}
+.kbd{display:inline-block;border:2px solid #000;border-radius:6px;background:#fff;
+  padding:0 7px;font-weight:800;font-size:12px;box-shadow:2px 2px 0 #000;margin:0 2px}
+.hint{font-size:12px;opacity:.75}
+.hearts{font-size:20px;letter-spacing:2px}
+.stat{display:flex;justify-content:space-between;font-weight:800;font-size:14px;
+  border-top:2px dashed #00000033;padding:6px 2px}
+/* touch controls */
+#touch{width:100%;max-width:1024px;display:flex;justify-content:space-between;gap:8px;
+  padding:6px 10px 12px}
+.tcluster{display:flex;gap:10px;align-items:center}
+.tbtn{border:3px solid #000;border-radius:16px;background:#f7e8c9ee;color:#23160c;
+  font-weight:900;min-width:64px;min-height:64px;padding:10px 14px;font-size:15px;
+  box-shadow:3px 3px 0 #000;touch-action:none;cursor:pointer;user-select:none}
+.tbtn:active,.tbtn.held{background:var(--gold);transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+.tbtn.wide{min-width:76px}
+.tbtn.pink{background:#ffd3e8}
+.tbtn.blue{background:#cfe9ff}
+#dpadL,#dpadR{min-width:72px;min-height:72px;font-size:24px}
+#helpKeys{width:100%;max-width:1024px;padding:0 12px 16px;font-size:12px;opacity:.75;text-align:center}
+/* hide touch pad on fine pointers unless forced */
+@media (pointer:fine){
+  #touch.auto-hide{display:none}
+  #showTouch{display:inline-block !important}
+}
+#showTouch{display:none}
+@media (pointer:coarse){
+  #showTouch{display:none !important}
+  #touch.auto-hide{display:flex}
+}
+@media (max-width:640px){
+  .tbtn{min-width:58px;min-height:58px;font-size:13px;padding:8px 10px}
+  #dpadL,#dpadR{min-width:66px;min-height:66px}
+  #helpKeys{display:none}
+}

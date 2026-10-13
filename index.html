@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#14100b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>CUPHED — Mug Mayhem (2D Boss Battler)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="topbar">
+  <div><div class="logo">☕ CUPHED</div><div class="sub">Mug Mayhem · 2D boss battler · phone / tablet / desktop</div></div>
+  <div class="spacer"></div>
+  <button class="chip small" id="showTouch" title="Show touch pad">🎮 Pad</button>
+  <button class="chip small" id="touchBtn" title="Toggle touch controls">📱 Touch</button>
+  <button class="chip small on" id="muteBtn">🔊 Sound</button>
+  <button class="chip small" id="pauseBtn">⏸ Pause</button>
+</div>
+
+<div id="wrap">
+  <div id="stage">
+    <canvas id="game" width="960" height="540"></canvas>
+
+    <div class="overlay" id="menuOv">
+      <div class="card">
+        <h1>CUPHED</h1>
+        <p><b>Mug Mayhem</b> — a tiny cup hero vs. <b>Lord Kettle</b>. Run, gun, dash &amp; parry through 3 phases. Built for thumbs &amp; keyboards.</p>
+        <p>💗 <b>Pink = parryable!</b> Hit <span class="kbd">L</span> / PARRY near pink shots to bounce &amp; charge your SUPER. Fill the meter, then blast with <span class="kbd">U</span> / SUPER.</p>
+        <p class="hint">Move <span class="kbd">←</span><span class="kbd">→</span> · Jump <span class="kbd">Space</span> · Shoot <span class="kbd">J</span> · Dash <span class="kbd">K</span> · Parry <span class="kbd">L</span> · Super <span class="kbd">U</span> · Pause <span class="kbd">P</span></p>
+        <p class="hint" id="bestLine"></p>
+        <div class="row">
+          <button class="bigbtn" id="startBtn">▶ START FIGHT</button>
+          <button class="bigbtn ghost" id="howBtn">❓ HOW TO PLAY</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="helpOv">
+      <div class="card">
+        <h2>❓ How to play</h2>
+        <p>🎯 <b>Goal:</b> empty Lord Kettle's HP bar before he empties your 5 hearts.</p>
+        <p>🏃 <b>Move:</b> D-pad / <span class="kbd">←</span><span class="kbd">→</span> · <b>Jump:</b> JUMP / <span class="kbd">Space</span> (hold = higher) · <b>Shoot:</b> hold SHOT / <span class="kbd">J</span></p>
+        <p>💨 <b>Dash</b> (DASH / <span class="kbd">K</span>) gives brief invincibility — dash <i>through</i> blobs. Cooldown ~0.8s.</p>
+        <p>💗 <b>Parry:</b> press PARRY / <span class="kbd">L</span> near <b>pink</b> shots. Destroys them, bounces you up, +34% SUPER, +250 pts.</p>
+        <p>⚡ <b>Super:</b> at 100%, press SUPER / <span class="kbd">U</span> for MEGA SIP (26 dmg + clears bullets).</p>
+        <p>👾 Sugar-cube minions walk at you — shoot them (+150). Boss charges in phases 2–3: jump or dash over him!</p>
+        <div class="row">
+          <button class="bigbtn gold" id="backBtn">← BACK</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="pauseOv">
+      <div class="card">
+        <h2>⏸ Paused</h2>
+        <p class="hint">Take a sip. Stretch those thumbs.</p>
+        <div class="row">
+          <button class="bigbtn gold" id="resumeBtn">▶ RESUME</button>
+          <button class="bigbtn ghost" id="quitBtn">🏠 MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="overOv">
+      <div class="card">
+        <h2>💀 Soggy Cup!</h2>
+        <p>Lord Kettle poured you out. Shake it off and go again!</p>
+        <div id="finalStats"></div>
+        <div class="row">
+          <button class="bigbtn" id="retryBtn">↻ REMATCH</button>
+          <button class="bigbtn ghost" id="howBtn2">❓ HELP</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay hidden" id="winOv">
+      <div class="card">
+        <h2>🏆 KETTLE CRACKED!</h2>
+        <p>You out-sipped the meanest pot in the pantry. Sweet victory!</p>
+        <div class="hearts">☕💛☕💛☕</div>
+        <div id="winStats"></div>
+        <div class="row">
+          <button class="bigbtn gold" id="retryBtn2">↻ PLAY AGAIN</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="touch" class="auto-hide">
+  <div class="tcluster">
+    <button class="tbtn" id="dpadL">◀</button>
+    <button class="tbtn" id="dpadR">▶</button>
+  </div>
+  <div class="tcluster">
+    <button class="tbtn blue" id="btnJump">JUMP</button>
+    <button class="tbtn" id="btnShoot">SHOT</button>
+    <button class="tbtn" id="btnDash">DASH</button>
+    <button class="tbtn pink" id="btnParry">PARRY</button>
+    <button class="tbtn wide" id="btnSuper">⚡</button>
+  </div>
+</div>
+
+<div id="helpKeys">Desktop: ←→ move · Space jump · J shoot · K dash · L parry · U super · P pause · Enter start &nbsp;|&nbsp; Phone/tablet: use the touch pad below (multi-touch supported).</div>
+
+<script src="game.js"></script>
+</body>
+</html>
